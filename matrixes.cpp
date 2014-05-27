@@ -52,14 +52,14 @@ vector<map< int,double> > create_global_matrix(int n){
 
 
 vector<map< int,double> > get_build_matrix( vector<Point>* points, vector<Face>* faces){
-    cout<<"test"<<endl;
+
     ELEMENTS::Triangle my_element;
     vector<map< int,double> > glob_matrix = create_global_matrix(points->size());
     std::vector< std::vector< double > > my_local_matrix;
     std::vector<double> corners(6, 0.0);
 
 
-    for(int i=0; i<faces->size();++i){
+    for(unsigned int i=0; i<faces->size();++i){
         // array corners contains the x- and y-coordinates of the
         // triangle corners in the order x0, y0, x1, y1, x2, y2
         corners[0] = faces->at(i).vertex0->x;
@@ -68,12 +68,12 @@ vector<map< int,double> > get_build_matrix( vector<Point>* points, vector<Face>*
         corners[3] = faces->at(i).vertex1->y;
         corners[4] = faces->at(i).vertex2->x;
         corners[5] = faces->at(i).vertex2->y;
-        cout<<i<<endl;
+
         // pass the corners to the finite element
         my_element(corners);
-        cout<<i<<endl;
+
         my_local_matrix = my_element.integrate(grad(v_()) * grad(w_()));
-        cout<<i<<endl;
+
         add_to_global_matrix(&glob_matrix,faces->at(i),&my_local_matrix);
     }
 
@@ -85,10 +85,10 @@ bool save_global_matrix(vector<map< int,double> >* glob_matrix, const char* name
     file.open(name, ios::out);
       if(!(file.is_open())){
           printf(" konnte nicht gespeichert werden\n");
-          exit(1);
+          return false;
       }
-      for(int j = 0;j<glob_matrix->size();++j){
-          for(int i = 0; i < glob_matrix->size(); i++){
+      for(unsigned int j = 0;j<glob_matrix->size();++j){
+          for(unsigned int i = 0; i < glob_matrix->size(); i++){
               if(glob_matrix->at(j).count(i)==1){
                   file <<glob_matrix->at(j)[i]  << ' ';
               }else{
@@ -99,6 +99,7 @@ bool save_global_matrix(vector<map< int,double> >* glob_matrix, const char* name
        }
 
           file.close();
+     return true;
 }
 
 
@@ -118,7 +119,7 @@ int main(int argc, char* argv[])
    cout<<"sizefaces:"<<faces.size()<<endl;
    //cout << faces.front().vertex0->x;
    vector<map< int,double> > glob_matrix=get_build_matrix( &points, &faces);
-
+   save_global_matrix(&glob_matrix,"matrix.txt");
 
 
 
