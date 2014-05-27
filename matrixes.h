@@ -6,7 +6,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <stdio.h>
-#include <string>
+#include <string.h>
 #include <map>
 #include <vector>
 #include "myColsamm/Source/Colsamm.h"
@@ -22,5 +22,7 @@ void add_to_global_matrix(vector<map< int,double> >* glob_matrix,Face element,ve
 
 vector<map< int,double> > create_global_matrix(int n);
 
-vector<map< int,double> > get_build_matrix( vector<Point>* points, vector<Face>* faces);
+vector<map< int,double> > get_build_matrix( vector<Point>* points, vector<Face>* faces,string type);
 bool save_global_matrix(vector<map< int,double> >* glob_matrix, const char* name);
+bool save_global_matrix_with_zeroes(vector<map< int,double> >* glob_matrix, const char* name);
+double getKq(double x, double y);

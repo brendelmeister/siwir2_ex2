@@ -7,8 +7,8 @@
 
 //using namespace ::_COLSAMM_;
 //using namespace std;
-
-
+static double delta;
+static double eps;
 
 
 void add_to_global_matrix(vector<map< int,double> >* glob_matrix,Face element,vector< vector<double> >* my_local_matrix){
@@ -51,7 +51,7 @@ vector<map< int,double> > create_global_matrix(int n){
 }
 
 
-vector<map< int,double> > get_build_matrix( vector<Point>* points, vector<Face>* faces){
+vector<map< int,double> > get_build_matrix( vector<Point>* points, vector<Face>* faces,string type){
 
     ELEMENTS::Triangle my_element;
     vector<map< int,double> > glob_matrix = create_global_matrix(points->size());
@@ -71,16 +71,41 @@ vector<map< int,double> > get_build_matrix( vector<Point>* points, vector<Face>*
 
         // pass the corners to the finite element
         my_element(corners);
-
-        my_local_matrix = my_element.integrate(grad(v_()) * grad(w_()));
-
+        if(type=="stiffness"){
+            my_local_matrix = my_element.integrate(grad(v_()) * grad(w_())- func<double>(getKq) * v_()*w_());
+        }else if(type=="mass"){
+            my_local_matrix = my_element.integrate(v_() * w_());
+        }
         add_to_global_matrix(&glob_matrix,faces->at(i),&my_local_matrix);
     }
 
     return glob_matrix;
 }
 
+
+
 bool save_global_matrix(vector<map< int,double> >* glob_matrix, const char* name){
+    ofstream file;
+    file.open(name, ios::out);
+      if(!(file.is_open())){
+          printf(" konnte nicht gespeichert werden\n");
+          return false;
+      }
+      for(unsigned int j = 0;j<glob_matrix->size();++j){
+          for(unsigned int i = 0; i < glob_matrix->size(); i++){
+              if(glob_matrix->at(j).count(i)==1){
+                  file <<j<<" "<<i<<" "<<glob_matrix->at(j)[i]  << endl;
+                }
+          }
+
+       }
+
+          file.close();
+     return true;
+}
+
+
+bool save_global_matrix_with_zeroes(vector<map< int,double> >* glob_matrix, const char* name){
     ofstream file;
     file.open(name, ios::out);
       if(!(file.is_open())){
@@ -103,7 +128,9 @@ bool save_global_matrix(vector<map< int,double> >* glob_matrix, const char* name
 }
 
 
-
+double getKq(double x, double y){
+    return (100.0+delta)*exp(-50.0*(x*x+y*y))-100.0;
+}
 
 
 
@@ -111,15 +138,29 @@ bool save_global_matrix(vector<map< int,double> >* glob_matrix, const char* name
 
 int main(int argc, char* argv[])
 {
+    if (argc != 3) {
+            cerr<<"error: wrong number of arguments"<<endl;
+            cout<<"call ./waveguide d e "<<endl;
+            cout<<"d: variable for the calculation of the variable coefficient k(x,y) ; e: stopping criterion for the solver"<<endl;
+            exit(EXIT_FAILURE);
+        }
+        delta = atoi(argv[1]);
+        eps = atoi(argv[2]);
+
+
+
    vector<Point> points;
    vector<Face> faces;
 
    bool success =readFromFile("./inputs/unit_circle.txt",&points,&faces);
   cout<<success<<endl;
-   cout<<"sizefaces:"<<faces.size()<<endl;
-   //cout << faces.front().vertex0->x;
-   vector<map< int,double> > glob_matrix=get_build_matrix( &points, &faces);
-   save_global_matrix(&glob_matrix,"matrix.txt");
+
+
+
+  vector<map< int,double> > glob_stiff=get_build_matrix( &points, &faces,"stiffness");
+  vector<map< int,double> > glob_mass=get_build_matrix( &points, &faces,"mass");
+  save_global_matrix(&glob_stiff,"stiffness.txt");
+  save_global_matrix(&glob_mass,"mass.txt");
 
 
 
