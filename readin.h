@@ -1,3 +1,5 @@
+#ifndef READIN_H
+#define READIN_H
 #include <fstream>
 #include <cstdlib>
 #include <iostream>
@@ -23,3 +25,5 @@ typedef struct Face
 //Read the points and faces from the given inputfile
 //return true on success
 bool readFromFile(string fileName, vector<Point>* points, vector<Face>* faces);
+
+#endif

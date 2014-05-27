@@ -159,14 +159,17 @@ int main(int argc, char* argv[])
    save_global_matrix(&glob_mass,"mass.txt");
 
    double lambda, lambda_old;
-   vector<double> u (glob_stiff.size(),0.);
-   vector<double> f (glob_stiff.size(),0.);
+   vector<double> u (glob_stiff.size(),1.);
+   vector<double> f (glob_stiff.size(),1.);
    lambda=1.;
 
    do {
       lambda_old = lambda;
       matrixVector(&glob_mass,&u,&f);
       //solve A*u=f
+      int steps =cgsolve( &glob_mass,&u,&f, eps);
+      cout<<"cgiter: "<<steps<<endl;
+
       vectorScalar(&u,1./(euclNorm(&u)));
       //use f as tmp here;
       matrixVector(&glob_stiff,&u,&f);
@@ -174,6 +177,7 @@ int main(int argc, char* argv[])
       lambda = vectorVector(&u,&f);
       matrixVector(&glob_mass,&u,&f);
       lambda = lambda/vectorVector(&u,&f);
+       cout<<"lambdaborder: "<<fabs((lambda-lambda_old)/lambda_old)<<endl;
    } while (fabs((lambda-lambda_old)/lambda_old)>1e-10 );
 
 
