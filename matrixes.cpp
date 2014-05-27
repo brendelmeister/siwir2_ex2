@@ -132,20 +132,16 @@ double getKq(double x, double y){
     return (100.0+delta)*exp(-50.0*(x*x+y*y))-100.0;
 }
 
-
-
-
-
 int main(int argc, char* argv[])
 {
-    if (argc != 3) {
-            cerr<<"error: wrong number of arguments"<<endl;
-            cout<<"call ./waveguide d e "<<endl;
-            cout<<"d: variable for the calculation of the variable coefficient k(x,y) ; e: stopping criterion for the solver"<<endl;
-            exit(EXIT_FAILURE);
-        }
-        delta = atoi(argv[1]);
-        eps = atoi(argv[2]);
+   if (argc != 3) {
+      cerr<<"error: wrong number of arguments"<<endl;
+      cout<<"call ./waveguide d e "<<endl;
+      cout<<"d: variable for the calculation of the variable coefficient k(x,y) ; e: stopping criterion for the solver"<<endl;
+      exit(EXIT_FAILURE);
+   }
+   delta = atoi(argv[1]);
+   eps = atoi(argv[2]);
 
 
 
@@ -153,15 +149,32 @@ int main(int argc, char* argv[])
    vector<Face> faces;
 
    bool success =readFromFile("./inputs/unit_circle.txt",&points,&faces);
-  cout<<success<<endl;
+   cout<<success<<endl;
 
 
 
-  vector<map< int,double> > glob_stiff=get_build_matrix( &points, &faces,"stiffness");
-  vector<map< int,double> > glob_mass=get_build_matrix( &points, &faces,"mass");
-  save_global_matrix(&glob_stiff,"stiffness.txt");
-  save_global_matrix(&glob_mass,"mass.txt");
+   vector<map< int,double> > glob_stiff=get_build_matrix( &points, &faces,"stiffness");
+   vector<map< int,double> > glob_mass=get_build_matrix( &points, &faces,"mass");
+   save_global_matrix(&glob_stiff,"stiffness.txt");
+   save_global_matrix(&glob_mass,"mass.txt");
 
+   double lambda, lambda_old;
+   vector<double> u (glob_stiff.size(),0.);
+   vector<double> f (glob_stiff.size(),0.);
+   lambda=1.;
+
+   do {
+      lambda_old = lambda;
+      matrixVector(&glob_mass,&u,&f);
+      //solve A*u=f
+      vectorScalar(&u,1./(euclNorm(&u)));
+      //use f as tmp here;
+      matrixVector(&glob_stiff,&u,&f);
+
+      lambda = vectorVector(&u,&f);
+      matrixVector(&glob_mass,&u,&f);
+      lambda = lambda/vectorVector(&u,&f);
+   } while (fabs((lambda-lambda_old)/lambda_old)>1e-10 );
 
 
    return 0;

@@ -1,4 +1,8 @@
 #include <math.h>
+#include <vector>
+#include <map>
+
+using namespace std;
 
 double euclNorm(vector<double>* u);
 

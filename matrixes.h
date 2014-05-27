@@ -11,6 +11,7 @@
 #include <vector>
 #include "myColsamm/Source/Colsamm.h"
 #include "readin.h"
+#include "iteration.h"
 
 using namespace ::_COLSAMM_;
 using namespace std;
