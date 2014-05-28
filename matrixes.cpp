@@ -159,8 +159,8 @@ int main(int argc, char* argv[])
    save_global_matrix(&glob_mass,"mass.txt");
 
    double lambda, lambda_old;
-   vector<double> u (glob_stiff.size(),1.);
-   vector<double> f (glob_stiff.size(),1.);
+   vector<double> u (glob_stiff.size(),10.);
+   vector<double> f (glob_stiff.size(),0.);
    lambda=1.;
 
    do {
@@ -168,18 +168,20 @@ int main(int argc, char* argv[])
       matrixVector(&glob_mass,&u,&f);//f=M*u
       //solve A*u=f
       int steps =cgsolve( &glob_stiff,&u,&f, eps);
-      cout<<"cgiter: "<<steps<<endl;
+      //cout<<"cgiter: "<<steps<<endl;
 
-      vectorScalar(&u,1./(euclNorm(&u)));
+      vectorScalar(&u,1./(euclNorm(&u)));//u=u/norm(u)
       //use f as tmp here;
-      matrixVector(&glob_stiff,&u,&f);
 
+      matrixVector(&glob_stiff,&u,&f); //lambda=u*A*u/u*M*u
       lambda = vectorVector(&u,&f);
       matrixVector(&glob_mass,&u,&f);
       lambda = lambda/vectorVector(&u,&f);
        cout<<"lambdaborder: "<<fabs((lambda-lambda_old)/lambda_old)<<endl;
+       cout<<"lambda: "<<lambda<<endl;
    } while (fabs((lambda-lambda_old)/lambda_old)>1e-10 );
    cout<<"lambdafinal"<<lambda<<endl;
+   saveDouble(lambda, "lambda.txt");
    vectorSave(&u, &points,"eigenmode.txt");
    return 0;
 }

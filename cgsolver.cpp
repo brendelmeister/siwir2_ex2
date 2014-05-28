@@ -9,14 +9,8 @@ int cgsolve(vector<map<int,double> >* A,vector<double>* x,vector<double>* b,doub
      NY = A->size();
      //int rows = NY - 1;
      //int columns = NX - 1;
-     C = 100;
+     C = 10000;
 
-
-     
-
-      
-
-      
       // variables for the cg algorithm
       vector<double> temp(x->size());
       vector<double> temp2(x->size());
@@ -37,8 +31,8 @@ int cgsolve(vector<map<int,double> >* A,vector<double>* x,vector<double>* b,doub
 
       //delta0 = scalar(g,g,rows*columns); // delta0 = (g,g)
       delta0= vectorVector(&g,&g);
-      cout<<"norm"<< euclNorm(&g)<<endl;
-      cout<<"delta0 :"<<delta0<<endl;
+     // cout<<"norm"<< euclNorm(&g)<<endl;
+     // cout<<"delta0 :"<<delta0<<endl;
       int step=0;
 
       if (delta0 >= eps) {
@@ -59,7 +53,7 @@ int cgsolve(vector<map<int,double> >* A,vector<double>* x,vector<double>* b,doub
 
                delta1 =vectorVector(&g, &g);
               //delta1 = scalar(g,g,rows*columns); //delta1 = (g,g)
-             cout<<"delta1 :"<<delta1<< "> " << eps<<endl;
+           //  cout<<"delta1 :"<<delta1<< "> " << eps<<endl;
               if (delta1 <= eps){
                 break;
                 cout<<"delta: "<<delta1<<endl;
@@ -73,7 +67,7 @@ int cgsolve(vector<map<int,double> >* A,vector<double>* x,vector<double>* b,doub
               delta0 = delta1;
            }
       }
-     cout<<"Steps:"<<step<<endl;
+     //cout<<"Steps:"<<step<<endl;
      //print(x, rows, columns, rows);
      return step;
 }

@@ -3,7 +3,7 @@
 double euclNorm(vector<double>* u)
 {
    double norm = 0.;
-   for (vector<double>::iterator it = u->begin() ; it != u->end(); ++it)
+   for (vector<double>::iterator it = u->begin(); it != u->end(); ++it)
       norm += (*it)*(*it);
 
    return sqrt(norm);
@@ -95,6 +95,18 @@ bool vectorSave(vector<double>* vec,vector<Point>* points,const char* name){
      file.close();
      return true;
 
+}
+bool saveDouble(double d,const char* name){
+    ofstream file;
+    file.open(name, ios::out);
+      if(!(file.is_open())){
+          printf(" konnte nicht gespeichert werden\n");
+          return false;
+      }
+
+     file <<setprecision(10)<<d<<endl;
+     file.close();
+     return true;
 }
 
 

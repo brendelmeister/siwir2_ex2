@@ -8,6 +8,7 @@
 #include <math.h>
 #include <vector>
 #include <map>
+#include <iomanip>
 
 #include "readin.h"
 
@@ -31,6 +32,8 @@ void matrixVector(vector<map<int,double> >* mat,vector<double>* vec,vector<doubl
 void vectorPrint(vector<double>* vec);
 
 bool vectorSave(vector<double>* vec,vector<Point>* points,const char* name);
+
+bool saveDouble(double d,const char* name);
 
 void testVectors();
 
