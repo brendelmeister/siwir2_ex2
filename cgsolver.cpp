@@ -10,14 +10,14 @@ int cgsolve(vector<map<int,double> >* A,vector<double>* x,vector<double>* b,doub
      //int rows = NY - 1;
      //int columns = NX - 1;
      C = 100;
-     EPS = eps;
+
 
      
 
       
 
       
-      // variables for the cg algorithm TODO: MPI
+      // variables for the cg algorithm
       vector<double> temp(x->size());
       vector<double> temp2(x->size());
       vector<double> g(x->size());
@@ -31,15 +31,17 @@ int cgsolve(vector<map<int,double> >* A,vector<double>* x,vector<double>* b,doub
       // cg algorithm
       //x = x0
       matrixVector(A,x, &temp);
+
       vectorSub(&temp,b,&g);
       //matmult(rows*columns, 1, rows*columns, A, rows*columns, x, 1, temp, 1); sub(temp,b,g,rows*columns);  //g = Ax-b
 
       //delta0 = scalar(g,g,rows*columns); // delta0 = (g,g)
       delta0= vectorVector(&g,&g);
-      //cout<<"delta0 :"<<delta0<<endl;
+      cout<<"norm"<< euclNorm(&g)<<endl;
+      cout<<"delta0 :"<<delta0<<endl;
       int step=0;
 
-      if (delta0 >= EPS) {
+      if (delta0 >= eps) {
           vectorScalar(&g, -1.0, &d);
 
         //factor(g,-1,d, rows*columns); //d = -g
@@ -57,14 +59,16 @@ int cgsolve(vector<map<int,double> >* A,vector<double>* x,vector<double>* b,doub
 
                delta1 =vectorVector(&g, &g);
               //delta1 = scalar(g,g,rows*columns); //delta1 = (g,g)
-             // cout<<"delta1 :"<<delta1<<endl;
-              if (delta1 <= EPS)
+             cout<<"delta1 :"<<delta1<< "> " << eps<<endl;
+              if (delta1 <= eps){
                 break;
-              //cout<<"iteration "<<endl;
+                cout<<"delta: "<<delta1<<endl;
+              }
+
               beta = delta1/delta0; // beta = delta1/delta0
-                vectorScalar(&d,beta,&temp);
-                vectorScalar(&g,-1.0,&temp);
-                vectorAdd(&temp,&temp2,&d);
+              vectorScalar(&d,beta,&temp);
+              vectorScalar(&g,-1.0,&temp);
+              vectorAdd(&temp,&temp2,&d);
               //factor(d,beta,temp, rows*columns); factor(g,-1,temp2, rows*columns); add(temp,temp2,d,rows*columns);   // d = -g + beta*d
               delta0 = delta1;
            }

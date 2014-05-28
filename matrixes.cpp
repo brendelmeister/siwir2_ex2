@@ -140,8 +140,8 @@ int main(int argc, char* argv[])
       cout<<"d: variable for the calculation of the variable coefficient k(x,y) ; e: stopping criterion for the solver"<<endl;
       exit(EXIT_FAILURE);
    }
-   delta = atoi(argv[1]);
-   eps = atoi(argv[2]);
+   delta = atof(argv[1]);
+   eps = atof(argv[2]);
 
 
 
@@ -165,9 +165,9 @@ int main(int argc, char* argv[])
 
    do {
       lambda_old = lambda;
-      matrixVector(&glob_mass,&u,&f);
+      matrixVector(&glob_mass,&u,&f);//f=M*u
       //solve A*u=f
-      int steps =cgsolve( &glob_mass,&u,&f, eps);
+      int steps =cgsolve( &glob_stiff,&u,&f, eps);
       cout<<"cgiter: "<<steps<<endl;
 
       vectorScalar(&u,1./(euclNorm(&u)));
