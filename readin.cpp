@@ -1,13 +1,15 @@
-#include <fstream>
-#include <cstdlib>
-#include <iostream>
-#include <vector>
-#include <string.h>
 
-using namespace std;
 
-typedef struct Point
+
+#include "readin.h"
+
+//#include "matrixes.cpp"
+
+//using namespace std;
+
+/*typedef struct Point
 {
+   int index;
    double x,y;
 } Point;
 
@@ -16,7 +18,7 @@ typedef struct Face
    Point* vertex0;
    Point* vertex1;
    Point* vertex2;
-} Face;
+} Face;*/
 
 //Read the points and faces from the given inputfile
 //return true on success
@@ -34,22 +36,23 @@ bool readFromFile(string fileName, vector<Point>* points, vector<Face>* faces)
    input.ignore(100,'\n');
    input.ignore(100,'\n');
 
-
-   int idxTmp;
+   cout<<"start reading points..."<<endl;
+   //int idxTmp;
    for (int i=0;i<numberOfPoints;i++)
    {
       Point ptmp;
-      input >> idxTmp >> ptmp.x >> ptmp.y;
+      input >> ptmp.index >> ptmp.x >> ptmp.y;
       
       points->push_back(ptmp);
    }
-
+   cout<<"finished"<<endl;
    int numberOfFaces;
    input >> numberOfFaces;
 
    input.ignore(100,'\n');
    input.ignore(100,'\n');
 
+    cout<<"start reading faces..."<<endl;
    int i0,i1,i2;
    for (int i=0;i<numberOfFaces;i++)
    {
@@ -62,12 +65,12 @@ bool readFromFile(string fileName, vector<Point>* points, vector<Face>* faces)
       faces->push_back(ftmp);
    }
    
-
+    cout<<"finished"<<endl;
    return true;
 
 }
 
-
+/*
 
 int main(int argc, char* argv[])
 {
@@ -80,3 +83,4 @@ int main(int argc, char* argv[])
 
    return 0;
 }
+*/

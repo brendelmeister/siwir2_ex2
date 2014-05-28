@@ -1,16 +1,25 @@
 CXX = g++
-CXXFLAGS ?= -ansi -Winline -Wshadow -Wall -O3
-BIN = readIn
-SOURCES = readin.cpp
-HEADERS = 
-LIBS = 
+CXXFLAGS ?= -ansi -Wall  #-pedantic -O3 #-fopenmp -Winline
+#-ggdb
+SOURCES = readin.cpp matrixes.cpp
+OBJECTS = readin.o matrixes.o iteration.o
+HEADERS = readin.h matrixes.h iteration.h 
+LIBS = -lm
 
 .PHONY: all clean
 
-all: ${BIN}
+all: readin.o matrixes.o test
 
-${BIN}: ${SOURCES}
-	${CXX} ${CXXFLAGS} -o $@ $< 
+# generic compilation rule
+%.o : %.cpp
+	${CXX} ${CXXFLAGS} -c $<
+
+#how to link
+test: ${OBJECTS}
+	${CXX} ${CXXFLAGS} -o $@ ${OBJECTS} ${LIBS}
+
+#readin: readin.o
+#	${CXX} ${CXXFLAGS} -o $@ $@.o ${LIBS}
 
 clean:
-	rm -f *.o *~ *.swp ${BIN}
+	rm -f *.o *~ *.txt  *.dat
