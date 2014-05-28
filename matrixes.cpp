@@ -17,17 +17,17 @@ void add_to_global_matrix(vector<map< int,double> >* glob_matrix,Face element,ve
 
 
 
-            glob_matrix->at(element.vertex0->index)[element.vertex0->index]+=my_local_matrix->at(0).at(0);
-            glob_matrix->at(element.vertex1->index)[element.vertex0->index]+=my_local_matrix->at(1).at(0);
-            glob_matrix->at(element.vertex2->index)[element.vertex0->index]+=my_local_matrix->at(2).at(0);
+            glob_matrix->at(element.vertex0)[element.vertex0]+=my_local_matrix->at(0).at(0);
+            glob_matrix->at(element.vertex1)[element.vertex0]+=my_local_matrix->at(1).at(0);
+            glob_matrix->at(element.vertex2)[element.vertex0]+=my_local_matrix->at(2).at(0);
 
-            glob_matrix->at(element.vertex0->index)[element.vertex1->index]+=my_local_matrix->at(0).at(1);
-            glob_matrix->at(element.vertex1->index)[element.vertex1->index]+=my_local_matrix->at(1).at(1);
-            glob_matrix->at(element.vertex2->index)[element.vertex1->index]+=my_local_matrix->at(2).at(1);
+            glob_matrix->at(element.vertex0)[element.vertex1]+=my_local_matrix->at(0).at(1);
+            glob_matrix->at(element.vertex1)[element.vertex1]+=my_local_matrix->at(1).at(1);
+            glob_matrix->at(element.vertex2)[element.vertex1]+=my_local_matrix->at(2).at(1);
 
-            glob_matrix->at(element.vertex0->index)[element.vertex2->index]+=my_local_matrix->at(0).at(2);
-            glob_matrix->at(element.vertex1->index)[element.vertex2->index]+=my_local_matrix->at(1).at(2);
-            glob_matrix->at(element.vertex2->index)[element.vertex2->index]+=my_local_matrix->at(2).at(2);
+            glob_matrix->at(element.vertex0)[element.vertex2]+=my_local_matrix->at(0).at(2);
+            glob_matrix->at(element.vertex1)[element.vertex2]+=my_local_matrix->at(1).at(2);
+            glob_matrix->at(element.vertex2)[element.vertex2]+=my_local_matrix->at(2).at(2);
 
 
 
@@ -62,12 +62,12 @@ vector<map< int,double> > get_build_matrix( vector<Point>* points, vector<Face>*
     for(unsigned int i=0; i<faces->size();++i){
         // array corners contains the x- and y-coordinates of the
         // triangle corners in the order x0, y0, x1, y1, x2, y2
-        corners[0] = faces->at(i).vertex0->x;
-        corners[1] = faces->at(i).vertex0->y;
-        corners[2] = faces->at(i).vertex1->x;
-        corners[3] = faces->at(i).vertex1->y;
-        corners[4] = faces->at(i).vertex2->x;
-        corners[5] = faces->at(i).vertex2->y;
+        corners[0] = points->at(faces->at(i).vertex0).x;
+        corners[1] = points->at(faces->at(i).vertex0).y;
+        corners[2] = points->at(faces->at(i).vertex1).x;
+        corners[3] = points->at(faces->at(i).vertex1).y;
+        corners[4] = points->at(faces->at(i).vertex2).x;
+        corners[5] = points->at(faces->at(i).vertex2).y;
 
         // pass the corners to the finite element
         my_element(corners);
@@ -84,6 +84,7 @@ vector<map< int,double> > get_build_matrix( vector<Point>* points, vector<Face>*
 
 
 
+/*
 bool save_global_matrix(vector<map< int,double> >* glob_matrix, const char* name){
     ofstream file;
     file.open(name, ios::out);
@@ -103,33 +104,33 @@ bool save_global_matrix(vector<map< int,double> >* glob_matrix, const char* name
           file.close();
      return true;
 }
+*/
 
+bool save_global_matrix(vector<map< int,double> >* glob_matrix, const char* name)
+{ 
+   ofstream file; 
+   file.open(name, ios::out);
+   if(!(file.is_open()))
+   { 
+      printf(" konnte nicht gespeichert werden\n");
+      return false; 
+   }
 
-bool save_global_matrix_with_zeroes(vector<map< int,double> >* glob_matrix, const char* name){
-    ofstream file;
-    file.open(name, ios::out);
-      if(!(file.is_open())){
-          printf(" konnte nicht gespeichert werden\n");
-          return false;
+   map<int,double>::iterator map_iter;
+
+   for(unsigned int i= 0; i < glob_matrix->size(); i++)
+   { //durch die verschiedenen maps gehen 
+      for(map_iter = (*glob_matrix)[i].begin(); map_iter!= (*glob_matrix)[i].end(); ++map_iter)
+      { file<<i<<" "<<(*map_iter).first<<" "<<(*map_iter).second<<endl;
+
       }
-      for(unsigned int j = 0;j<glob_matrix->size();++j){
-          for(unsigned int i = 0; i < glob_matrix->size(); i++){
-              if(glob_matrix->at(j).count(i)==1){
-                  file <<glob_matrix->at(j)[i]  << ' ';
-              }else{
-                   file <<0.0  << ' ';
-              }
-          }
-          file << endl;
-       }
+   }
 
-          file.close();
-     return true;
+   file.close(); return true; 
 }
 
-
 double getKq(double x, double y){
-    return (100.0+delta)*exp(-50.0*(x*x+y*y))-100.0;
+   return (100.0+delta)*exp(-50.0*(x*x+y*y))-100.0;
 }
 
 int main(int argc, char* argv[])
@@ -148,10 +149,7 @@ int main(int argc, char* argv[])
    vector<Point> points;
    vector<Face> faces;
 
-   bool success =readFromFile("./inputs/unit_circle.txt",&points,&faces);
-   cout<<success<<endl;
-
-
+   readFromFile("./inputs/unit_circle.txt",&points,&faces);
 
    vector<map< int,double> > glob_stiff = get_build_matrix( &points, &faces,"stiffness");
    vector<map< int,double> > glob_mass = get_build_matrix( &points, &faces,"mass");
@@ -167,8 +165,7 @@ int main(int argc, char* argv[])
       lambda_old = lambda;
       matrixVector(&glob_mass,&u,&f);//f=M*u
       //solve A*u=f
-      int steps =cgsolve( &glob_stiff,&u,&f, eps);
-      //cout<<"cgiter: "<<steps<<endl;
+      cgsolve( &glob_stiff,&u,&f, eps);
 
       vectorScalar(&u,1./(euclNorm(&u)));//u=u/norm(u)
       //use f as tmp here;

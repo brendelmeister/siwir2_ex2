@@ -18,13 +18,6 @@ extern "C" {
 
 using namespace std;
 
-static double EPS;// epsilon
-static int C;// number of iterations
-static int NX;//number if intervalls in x direction
-static int NY;//number if intervalls in i direction
-
-
-
 
 int cgsolve(vector<map<int,double> >* A,vector<double>* x,vector<double>* b,double eps);
 

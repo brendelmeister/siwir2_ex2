@@ -4,12 +4,7 @@
 
 
 int cgsolve(vector<map<int,double> >* A,vector<double>* x,vector<double>* b,double eps) {
-
-    NX = A->size();
-     NY = A->size();
-     //int rows = NY - 1;
-     //int columns = NX - 1;
-     C = 10000;
+     int C = 10000;
 
       // variables for the cg algorithm
       vector<double> temp(x->size());

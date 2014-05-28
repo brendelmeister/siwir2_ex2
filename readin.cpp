@@ -37,11 +37,12 @@ bool readFromFile(string fileName, vector<Point>* points, vector<Face>* faces)
    input.ignore(100,'\n');
 
    cout<<"start reading points..."<<endl;
-   //int idxTmp;
+   int idxTmp;
    for (int i=0;i<numberOfPoints;i++)
    {
       Point ptmp;
-      input >> ptmp.index >> ptmp.x >> ptmp.y;
+      input >> idxTmp >> ptmp.x >> ptmp.y;
+      //ptmp.midToNb;
       
       points->push_back(ptmp);
    }
@@ -53,15 +54,22 @@ bool readFromFile(string fileName, vector<Point>* points, vector<Face>* faces)
    input.ignore(100,'\n');
 
     cout<<"start reading faces..."<<endl;
-   int i0,i1,i2;
    for (int i=0;i<numberOfFaces;i++)
    {
       Face ftmp;
-      input >> i0 >> i1 >> i2;
-      ftmp.vertex0=&points->at(i0);
-      ftmp.vertex1=&points->at(i1);
-      ftmp.vertex2=&points->at(i2);
-      
+      input >> ftmp.vertex0 >> ftmp.vertex1 >> ftmp.vertex2 ;
+
+      //add neighbours
+      points->at(ftmp.vertex0).midToNb[ftmp.vertex1]=-1;
+      points->at(ftmp.vertex0).midToNb[ftmp.vertex2]=-1;
+
+      points->at(ftmp.vertex1).midToNb[ftmp.vertex0]=-1;
+      points->at(ftmp.vertex1).midToNb[ftmp.vertex2]=-1;
+
+      points->at(ftmp.vertex2).midToNb[ftmp.vertex0]=-1;
+      points->at(ftmp.vertex2).midToNb[ftmp.vertex1]=-1;
+
+
       faces->push_back(ftmp);
    }
    
@@ -70,6 +78,43 @@ bool readFromFile(string fileName, vector<Point>* points, vector<Face>* faces)
 
 }
 
+/*
+void refine(Face* face,vector<Point>* points)
+{
+   //the mid-Points to be created;
+   int i01,i02,i12;
+   Point m01,m02,m12;
+
+   //if the midPoint between vertex 0 and 1 does not exist
+   //create it; add it to the vertex list; and update all neighbours
+   if (points->at(face->vertex0).midToNb.at(face->vertex1) == -1)
+   {
+      m01.x = (points->at(face->vertex1).x - points->at(face->vertex0).x)/2.;
+      m01.y = (points->at(face->vertex1).y - points->at(face->vertex0).y)/2.;
+
+      m01.midToNb[face->vertex0]=-1;
+      m01.midToNb[face->vertex1]=-1;
+
+      points->push_back(m01);
+
+	//remove and set new neighbours of face->vertex0 and vertex1
+	
+
+   }
+   else
+      m01 = points->at(points->at(face->vertex0).midToNb.at(face->vertex1));
+
+
+   m01.midToNb[i02]=-1;
+   m01.midToNb[i12]=-1;
+
+
+//add four faces
+
+}
+*/
+
+/*
 bool readFromFileRefine(string fileName, vector<Point>* points, vector<Face>* faces,int lvl){
 ifstream input;
 input.open(fileName.c_str());
@@ -115,6 +160,7 @@ for (int i=0;i<numberOfFaces;i++)
 return true;
 
 }
+*/
 
 
 

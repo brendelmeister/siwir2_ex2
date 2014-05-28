@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS ?= -ansi -Wall  #-pedantic -O3 #-fopenmp -Winline
+CXXFLAGS ?= -ansi -Wall -pedantic #-pg  -O3 #-fopenmp -Winline
 #-ggdb
 SOURCES = readin.cpp matrixes.cpp cgsolver.cpp
 OBJECTS = readin.o matrixes.o iteration.o cgsolver.o
