@@ -153,8 +153,8 @@ int main(int argc, char* argv[])
 
 
 
-   vector<map< int,double> > glob_stiff=get_build_matrix( &points, &faces,"stiffness");
-   vector<map< int,double> > glob_mass=get_build_matrix( &points, &faces,"mass");
+   vector<map< int,double> > glob_stiff = get_build_matrix( &points, &faces,"stiffness");
+   vector<map< int,double> > glob_mass = get_build_matrix( &points, &faces,"mass");
    save_global_matrix(&glob_stiff,"stiffness.txt");
    save_global_matrix(&glob_mass,"mass.txt");
 
@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
       lambda = lambda/vectorVector(&u,&f);
        cout<<"lambdaborder: "<<fabs((lambda-lambda_old)/lambda_old)<<endl;
    } while (fabs((lambda-lambda_old)/lambda_old)>1e-10 );
-
-
+   cout<<"lambdafinal"<<lambda<<endl;
+   vectorSave(&u, &points,"eigenmode.txt");
    return 0;
 }
