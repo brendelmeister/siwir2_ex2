@@ -14,9 +14,7 @@ typedef struct Point
 {
    //int index;
    double x,y;
-   //contains the indices to all neighbouring points as keys.
-   //value is either -1 if the path to the according neighbour
-   //was not yet subdivided, otherwise the index of the midPoint
+   //contains the indices of existing midpoints to (former) neighbouring points as keys.
    map<int,int> midToNb;
 } Point;
 
@@ -31,4 +29,5 @@ typedef struct Face
 //return true on success
 bool readFromFile(string fileName, vector<Point>* points, vector<Face>* faces);
 
+void refine(Face* face,vector<Point>* points,vector<Face>* newFaces);
 #endif

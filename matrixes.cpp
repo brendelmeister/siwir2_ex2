@@ -145,11 +145,17 @@ int main(int argc, char* argv[])
    eps = atof(argv[2]);
 
 
-
    vector<Point> points;
    vector<Face> faces;
 
    readFromFile("./inputs/unit_circle.txt",&points,&faces);
+
+   vector<Face> finerFaces;
+
+   for (vector<Face>::iterator it = faces.begin() ; it != faces.end(); ++it)
+      refine(&(*it),&points,&finerFaces);
+
+   faces=finerFaces;
 
    vector<map< int,double> > glob_stiff = get_build_matrix( &points, &faces,"stiffness");
    vector<map< int,double> > glob_mass = get_build_matrix( &points, &faces,"mass");
