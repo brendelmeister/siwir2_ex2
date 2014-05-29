@@ -30,4 +30,6 @@ typedef struct Face
 bool readFromFile(string fileName, vector<Point>* points, vector<Face>* faces);
 
 void refine(Face* face,vector<Point>* points,vector<Face>* newFaces);
+
+void clearNeighbours(Point* point);
 #endif

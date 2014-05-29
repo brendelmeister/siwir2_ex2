@@ -35,6 +35,4 @@ bool vectorSave(vector<double>* vec,vector<Point>* points,const char* name);
 
 bool saveDouble(double d,const char* name);
 
-void testVectors();
-
 #endif

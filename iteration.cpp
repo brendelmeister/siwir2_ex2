@@ -125,56 +125,6 @@ bool vectorSave(vector<double>* vec,vector<Point>* points,const char* name){
 }
 
 
-void testVectors(){
-    vector<double> test1(10,8.0);
-    vector<double> abc(10,7.);
-    vector<double> res(10);
-
-    cout<<"vecadd test1+abc "<<endl;
-    vectorAdd(&test1,&abc,&res);
-    vectorPrint(&res);
-
-    cout<<"vecsub res-abc "<<endl;
-    vectorSub(&res,&abc,&res);
-    vectorPrint(&res);
-
-    cout<<"vecscalar 3 "<<endl;
-    vectorScalar(&res,3.);
-    vectorPrint(&res);
-
-    cout<<"vecscalar 3 test1"<<endl;
-    vectorScalar(&res,3.,&test1);
-    vectorPrint(&test1);
-
-
-
-    // cout<<"vecvec test1 abc "<<endl;
-    cout<<vectorVector(&test1,&abc)<<endl;
-    vector<map< int,double> > testmat(2);//=new vector<map< int,double> >(n);
-    for (int i=0;i<2;++i){
-        testmat[i];//=new map< int,double> ();
-    }
-
-    testmat[0][0]= 1;
-    testmat[0][1]= 1;
-    testmat[1][0]= 1;
-    //testmat[1][1]= 1;
-
-
-    cout<<"matrixVector"<<endl;
-    vector<double> vec(2,9.0);
-    vector<double> ret(3);
-    matrixVector(&testmat,&vec,&ret);
-    vectorPrint(&ret);
-
-    cout<<"matrixVector1"<<endl;
-    vector<double> vec1(2,9.0);
-    vector<double> ret1(3);
-    matrixVector(&testmat,&vec1,&ret1);
-    vectorPrint(&ret1);
-
-
-}
 
 bool saveDouble(double d,const char* name){
     ofstream file;
