@@ -8,6 +8,7 @@
 #include <math.h>
 #include <vector>
 #include <map>
+#include <iomanip>
 
 #include "readin.h"
 
@@ -32,6 +33,6 @@ void vectorPrint(vector<double>* vec);
 
 bool vectorSave(vector<double>* vec,vector<Point>* points,const char* name);
 
-void testVectors();
+bool saveDouble(double d,const char* name);
 
 #endif

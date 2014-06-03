@@ -1,25 +1,20 @@
 CXX = g++
-CXXFLAGS ?= -ansi -Wall  #-pedantic -O3 #-fopenmp -Winline
-#-ggdb
+CXXFLAGS ?= -ansi -Wall -pedantic #-pg  -O3 #-fopenmp -Winline
 SOURCES = readin.cpp matrixes.cpp cgsolver.cpp
 OBJECTS = readin.o matrixes.o iteration.o cgsolver.o
-HEADERS = readin.h matrixes.h iteration.h cgsolver.h 
 LIBS = -lm
 
 .PHONY: all clean
 
-all: readin.o matrixes.o test
+all: waveguide
 
 # generic compilation rule
 %.o : %.cpp
 	${CXX} ${CXXFLAGS} -c $<
 
 #how to link
-test: ${OBJECTS}
+waveguide: ${OBJECTS}
 	${CXX} ${CXXFLAGS} -o $@ ${OBJECTS} ${LIBS}
 
-#readin: readin.o
-#	${CXX} ${CXXFLAGS} -o $@ $@.o ${LIBS}
-
 clean:
-	rm -f *.o *~ *.txt  *.dat
+	rm -f *.o *~ *.txt  *.dat waveguide
