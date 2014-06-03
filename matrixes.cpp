@@ -23,7 +23,11 @@ int main(int argc, char* argv[])
    vector<Point> points;
    vector<Face> faces;
 
-   readFromFile("./inputs/unit_circle.txt",&points,&faces);
+   if (!readFromFile("./inputs/unit_circle.txt",&points,&faces))
+   {
+      cerr << "Failed to open input-file ./inputs/unit_circle.txt" << endl;
+      exit(EXIT_FAILURE);
+   }
 
    vector<Face> finerFaces;
 

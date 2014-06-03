@@ -1,0 +1,23 @@
+SiWiR2 - Group 15 - Assignment 2
+Lina Gundelwein; 21671480; ol24azub
+Lorenz Hufnagel; 21612689; xo26lusy
+Tim Brendel; 21515135; ca61selu
+Michael Hildebrand; 21602600; mu23jyhu
+
+Package:
+matrixes.cpp - Main entry point
+cgsolver.cpp - our LSE-Solver
+iteration.cpp - Matrix/Vector-Operations
+readin.cpp - Read & refine input file
+cgsolver.h
+iteration.h
+matrixes.h
+readin.h
+Makefile
+README
+
+Usage: Use the Makefile to generate the waveguide-Executable.
+Run it with the parameters 0.01 and 1e-15 
+(first one as delta for the k-Square and the second parameter as stopping criterion for the cg-Solver).
+An optional third argument is used as refinement-Level (try small Numbers <5!).
+Note that the input-File has to reside under the path ./inputs/unit_circle.txt!

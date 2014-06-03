@@ -39,17 +39,6 @@ bool readFromFile(string fileName, vector<Point>* points, vector<Face>* faces)
       Face ftmp;
       input >> ftmp.vertex0 >> ftmp.vertex1 >> ftmp.vertex2 ;
 
-      /*add neighbours
-      points->at(ftmp.vertex0).midToNb[ftmp.vertex1]=-1;
-      points->at(ftmp.vertex0).midToNb[ftmp.vertex2]=-1;
-
-      points->at(ftmp.vertex1).midToNb[ftmp.vertex0]=-1;
-      points->at(ftmp.vertex1).midToNb[ftmp.vertex2]=-1;
-
-      points->at(ftmp.vertex2).midToNb[ftmp.vertex0]=-1;
-      points->at(ftmp.vertex2).midToNb[ftmp.vertex1]=-1;
-      */
-
       faces->push_back(ftmp);
    }
    
@@ -71,24 +60,11 @@ void refine(Face* face,vector<Point>* points,vector<Face>* newFaces)
       m01.x = (points->at(face->vertex1).x + points->at(face->vertex0).x)/2.;
       m01.y = (points->at(face->vertex1).y + points->at(face->vertex0).y)/2.;
 
-      /*
-      m01.midToNb[face->vertex0]=-1;
-      m01.midToNb[face->vertex1]=-1;
-      */
-
       points->push_back(m01);
       i01 = points->size()-1;
 
       points->at(face->vertex0).midToNb[face->vertex1]=i01;
       points->at(face->vertex1).midToNb[face->vertex0]=i01;
-
-      //remove and set new neighbour of face->vertex0 and vertex1
-      /*
-      points->at(face->vertex0).midToNb.erase(face->vertex1);
-      points->at(face->vertex0).midToNb[i01]=-1;
-      points->at(face->vertex1).midToNb.erase(face->vertex0);
-      points->at(face->vertex1).midToNb[i01]=-1;
-      */
 
    }
    else
@@ -130,11 +106,6 @@ void refine(Face* face,vector<Point>* points,vector<Face>* newFaces)
       i02 = points->at(face->vertex0).midToNb.at(face->vertex2);
       m02 = points->at(i02);
    }
-
-   /*
-   m01.midToNb[i02]=-1;
-   m01.midToNb[i12]=-1;
-   */
 
    //add four faces
 
